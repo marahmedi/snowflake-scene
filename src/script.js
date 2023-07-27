@@ -17,26 +17,38 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
+ * Sizes
+ */
+ const sizes = {
+    width: window.innerWidth,
+    height: window.innerHeight
+}
+
+/**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const background = textureLoader.load('../textures/background.jpg')
+const snowflake = textureLoader.load('../textures/particles/snowflake.png')
+console.log(snowflake)
 
 /**
- * Test cube
+ * Sphere
  */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial()
-)
-scene.add(cube)
+
+const geometry = new THREE.SphereGeometry(30, 64, 64)
+const material = new THREE.MeshBasicMaterial({
+    map: background
+})
+
+const mesh = new THREE.Mesh(geometry, material)
+mesh.material.side = THREE.BackSide
+scene.add(mesh)
+
 
 /**
  * Sizes
  */
-const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight
-}
 
 window.addEventListener('resize', () =>
 {
@@ -53,16 +65,19 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
+
 /**
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.z = 3
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 200)
+camera.position.z = 20
+camera.position.y = -4
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
+controls.enableZoom = false
 controls.enableDamping = true
 
 /**
