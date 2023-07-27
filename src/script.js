@@ -30,7 +30,6 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 const background = textureLoader.load('../textures/background.jpg')
 const snowflake = textureLoader.load('../textures/particles/snowflake.png')
-console.log(snowflake)
 
 /**
  * Sphere
@@ -45,10 +44,28 @@ const mesh = new THREE.Mesh(geometry, material)
 mesh.material.side = THREE.BackSide
 scene.add(mesh)
 
-
 /**
- * Sizes
+ * Particles
  */
+
+const particlesGeometry = new THREE.BufferGeometry()
+const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.2,
+    sizeAttenuation: true // to specify if distant particles should be smaller than close particles
+})
+const count = 5000
+
+const positions = new Float32Array(count * 3)
+
+for(let i=0; i<count * 3; i++){
+    positions[i] = (Math.random()- 0.5) * 50
+}
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+// Points
+const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+scene.add(particles)
 
 window.addEventListener('resize', () =>
 {
